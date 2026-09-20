@@ -34,3 +34,57 @@ ggsave("flipper_bill_plot.png")
 ```
 
 As seen in the scatterplot, the Adelie penguins tend to have lower flipper lengths and bill lengths. The Chinstrap penguins tend to have similar flipper lengths to Adelie (on the lower side) but longer bill lengths. Gentoo penguins tend to have the highest flipper lengths and bill lengths similar to the Chinstrap penguins.
+
+# Problem 2
+
+```{r data_setup}
+set.seed(1)
+
+prob2_df =
+  tibble(
+    norm_sample = rnorm(10),
+    vec_logic = norm_sample > 0,
+    vec_char = c("a", "b", "c", "d", "e", "f", "g", "h", "i", "j"),
+    vec_factor = factor(c("low", "low", "low", "med", "med", "med", "med", "high", "high", "high"))
+  )
+```
+
+## Means of each of the vectors
+
+```{r norm_mean}
+mean(pull(prob2_df, norm_sample))
+```
+
+You can take the mean of the normal sample vector.
+
+```{r logic_mean}
+mean(pull(prob2_df, vec_logic))
+```
+
+You can take the mean of the logic vector (assigns values of 0 or 1 depending on if the observation satisfies the criteria).
+
+```{r char_mean}
+mean(pull(prob2_df, vec_char))
+```
+
+You cannot take the mean of a character vector because the values are not numeric.
+
+```{r factor_mean}
+mean(pull(prob2_df, vec_factor))
+```
+
+Similarly, you cannot take the mean of a factor vector because the `mean()` function only accepts numeric or logical inputs.
+
+## Using as.numeric() to convert vectors to numeric
+
+```{r as_numeric, results = "hide", warning = FALSE}
+as.numeric(pull(prob2_df, vec_logic))
+as.numeric(pull(prob2_df, vec_char))
+as.numeric(pull(prob2_df, vec_factor))
+```
+
+Logical vector: `as.numeric()` returns 0s and 1s, converting TRUE to 1 and FALSE to 0. This is the same coercion the `mean()` function performs, which is why the mean of the logical vector works. It's just the proportion of sample values above 0, or `r mean(pull(prob2_df, vec_logic))` here. Because the standard Normal is centered at 0, we'd expect that proportion to be around 0.5, though randomization and our low sample size may lead the calculated mean to land off the expected value of 0.5.
+
+Character vector: `as.numeric()` returns a vector of NAs, since there's no number that "a", or any letter, corresponds to. Character variables are also not ordered or finite in options, as with factor variables. This is why `mean()` returns NA as well. There are no numeric values to average.
+
+Factor vector: `as.numeric()` returns the integer codes R stores for each level. A factor holds a finite set of levels plus a code for each observation, and by default those codes follow the alphabetical order of the levels: `r levels(pull(prob2_df, vec_factor))`, so high = 1, low = 2, med = 3. Those codes reflect alphabetical position rather than anything we defined, so while `mean(as.numeric(pull(prob2_df, vec_factor)))` does return a value (`r mean(as.numeric(pull(prob2_df, vec_factor)))`), that value has no meaningful interpretation. Specifying `levels = c("low", "med", "high")` inside `factor()` would at least make the codes follow the real order, though a mean would still assume the gap from low to med equals the gap from med to high. An example for this could be age where child = 0-12 years, adolescent = 12-18 years, and adult = 18+. Coding them 1, 2, and 3 implies the step from child to adolescent matches the step from adolescent to adult, even though the underlying bins cover very different ranges.
