@@ -3,3 +3,34 @@ title: "Homework 1"
 output: github_document
 date: "2026-09-20"
 ---
+
+# Problem 1
+
+```{r setup, message = FALSE}
+library(tidyverse)
+data("penguins", package = "palmerpenguins")
+```
+
+The penguins dataset contains information on `r nrow(penguins)` penguins. There are `r ncol(penguins)` columns in this dataset, containing information on:
+
+*   species: `r levels(pull(penguins, species))`
+*   island: `r levels(pull(penguins, island))`
+*   bill length: range = `r min(pull(penguins, bill_length_mm), na.rm = TRUE)` - `r max(pull(penguins, bill_length_mm), na.rm = TRUE)` mm
+*   bill depth: range = `r min(pull(penguins, bill_depth_mm), na.rm = TRUE)` - `r max(pull(penguins, bill_depth_mm), na.rm = TRUE)` mm
+*   flipper length: range = `r min(pull(penguins, flipper_length_mm), na.rm = TRUE)` - `r max(pull(penguins, flipper_length_mm), na.rm = TRUE)` mm
+*   body mass: range = `r min(pull(penguins, body_mass_g), na.rm = TRUE)` - `r max(pull(penguins, body_mass_g), na.rm = TRUE)` g
+*   sex: `r levels(pull(penguins, sex))`
+*   year: range = `r min(pull(penguins, year), na.rm = TRUE)` - `r max(pull(penguins, year), na.rm = TRUE)`
+
+The mean flipper length of the penguins in this dataset is `r round(mean(pull(penguins, flipper_length_mm), na.rm = TRUE), 1)` mm.
+
+## Scatterplot of flipper length against bill length
+
+```{r flipper_bill_plot, message = FALSE}
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) +
+  geom_point()
+
+ggsave("flipper_bill_plot.png")
+```
+
+As seen in the scatterplot, the Adelie penguins tend to have lower flipper lengths and bill lengths. The Chinstrap penguins tend to have similar flipper lengths to Adelie (on the lower side) but longer bill lengths. Gentoo penguins tend to have the highest flipper lengths and bill lengths similar to the Chinstrap penguins.
