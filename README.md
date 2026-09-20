@@ -6,4 +6,4 @@ against bill length by species. Problem 2 explores variable types and coercion
 in R.
 
 - `p8105_hw1_ecf2166.Rmd` — source
-- `p8105_hw1_ecf2166.md` — knitted output
+- `p8105_hw1_ecf2166.md` — knitted output 
